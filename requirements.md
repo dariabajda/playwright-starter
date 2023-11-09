@@ -2,11 +2,11 @@
 
 ### Basic project
 
-- [ ] Add Playwright
-- [ ] Add eslint
-- [ ] Add prettier
-- [ ] Add husky
-- [ ] Add basic scripts
+- [x] Add Playwright
+- [x] Add eslint
+- [x] Add prettier
+- [x] Add husky
+- [x] Add basic scripts
 
 ### Configuration
 
