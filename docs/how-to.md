@@ -19,3 +19,5 @@ npm init playwright@latest
 ```
 
 4. Add eslint, husky & prettier with https://playwrightsolutions.com/the-definitive-guide-to-api-test-automation-with-playwright-part-8-adding-eslint-prettier-and-husky/
+
+5. Add environment config with https://medium.com/@irfan17sat/configuring-multiple-environments-in-playwright-67e402c1c627

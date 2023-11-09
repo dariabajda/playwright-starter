@@ -1,15 +1,13 @@
-import { defineConfig, devices } from '@playwright/test';
+import { devices } from '@playwright/test';
+import { PlaywrightTestConfig } from '@playwright/test';
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
+// Config to hold extra properties
+interface TestConfig extends PlaywrightTestConfig {
+  baseUrl: string;
+  apiUrl: string;
+}
 
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
-export default defineConfig({
+const defaultConfig: PlaywrightTestConfig = {
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -23,9 +21,6 @@ export default defineConfig({
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
-
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
@@ -36,42 +31,34 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
+};
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
-});
+// set config for dev
+const devConfig: TestConfig = {
+  baseUrl: 'https://dev.example.com',
+  apiUrl: 'https://dev.api.example.com',
+};
+
+// set config for stage
+const stageConfig: TestConfig = {
+  baseUrl: 'https://stage.example.com',
+  apiUrl: 'https://stage.api.example.com',
+};
+
+// set config for prod
+const prodConfig: TestConfig = {
+  baseUrl: 'https://prod.example.com',
+  apiUrl: 'https://prod.api.example.com',
+};
+
+// get the environment type from command line. If none, set it to dev
+const environment = process.env.TEST_ENV || 'dev';
+
+// config object with default configuration and environment specific configuration
+const config: TestConfig = {
+  ...defaultConfig,
+  ...(environment === 'dev' ? devConfig : environment === 'prod' ? prodConfig : stageConfig),
+};
+
+export default config;
