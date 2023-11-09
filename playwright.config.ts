@@ -1,11 +1,9 @@
 import { devices } from '@playwright/test';
 import { PlaywrightTestConfig } from '@playwright/test';
-
-// Config to hold extra properties
-interface TestConfig extends PlaywrightTestConfig {
-  baseUrl: string;
-  apiUrl: string;
-}
+import { devConfig } from './config/env/devConfig';
+import { TestConfig } from './config/testConfig';
+import { prodConfig } from './config/env/prodConfig';
+import { stageConfig } from './config/env/stageConfig';
 
 const defaultConfig: PlaywrightTestConfig = {
   testDir: './tests',
@@ -34,31 +32,13 @@ const defaultConfig: PlaywrightTestConfig = {
   ],
 };
 
-// set config for dev
-const devConfig: TestConfig = {
-  baseUrl: 'https://dev.example.com',
-  apiUrl: 'https://dev.api.example.com',
-};
-
-// set config for stage
-const stageConfig: TestConfig = {
-  baseUrl: 'https://stage.example.com',
-  apiUrl: 'https://stage.api.example.com',
-};
-
-// set config for prod
-const prodConfig: TestConfig = {
-  baseUrl: 'https://prod.example.com',
-  apiUrl: 'https://prod.api.example.com',
-};
-
-// get the environment type from command line. If none, set it to dev
-const environment = process.env.TEST_ENV || 'dev';
+// get the environment type from command line. If none, set it to stage
+const environment = process.env.TEST_ENV || 'stage';
 
 // config object with default configuration and environment specific configuration
 const config: TestConfig = {
   ...defaultConfig,
-  ...(environment === 'dev' ? devConfig : environment === 'prod' ? prodConfig : stageConfig),
+  ...(environment === 'prod' ? prodConfig : environment === 'stage' ? stageConfig : devConfig),
 };
 
 export default config;

@@ -11,7 +11,7 @@
 
 ### Configuration
 
-- [ ] Handle different environments
+- [x] Handle different environments
 - [ ] Handle different browsers
 
 ### CI
