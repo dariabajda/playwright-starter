@@ -1,11 +1,14 @@
 # How to setup new Playwright project
 
 1. Install latest Playwright
+
 ```
 npm init playwright@latest
 ```
+
 2. Generate basic Playwright project
 3. Add basic scripts
+
 ```json
 "scripts": {
     "test": "playwright test",
@@ -14,4 +17,5 @@ npm init playwright@latest
     "test:headed": "playwright test --headed"
   }
 ```
-4. 
+
+4. Add eslint, husky & prettier with https://playwrightsolutions.com/the-definitive-guide-to-api-test-automation-with-playwright-part-8-adding-eslint-prettier-and-husky/
