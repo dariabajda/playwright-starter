@@ -7,7 +7,7 @@
 - [x] Add prettier
 - [x] Add husky
 - [x] Add basic scripts
-- [ ] Set reporters
+- [x] Set reporters
 
 ### Configuration
 
