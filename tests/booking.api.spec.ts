@@ -21,3 +21,14 @@ test('should get a new booking by ID', async ({ bookingApi }) => {
   // then
   expect(getBookingByIdResponse).toEqual(newBooking.booking);
 });
+
+test('should get new booking in all booking IDs', async ({ bookingApi }) => {
+  // given
+  const newBooking = await bookingApi.createBooking();
+
+  // when
+  const bookingIds = await bookingApi.getAllBookings();
+
+  // then
+  expect(bookingIds.map((booking) => booking.bookingid)).toContain(newBooking.bookingid);
+});

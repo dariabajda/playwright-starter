@@ -26,7 +26,7 @@ export class BookingApi {
     return await response.json();
   }
 
-  async getAllBookings(): Promise<Booking> {
+  async getAllBookings(): Promise<{ bookingid: number }[]> {
     const response = await this.apiHandler.get('/booking');
     expect(response.ok()).toBeTruthy();
     expect(response.status()).toBe(200);
