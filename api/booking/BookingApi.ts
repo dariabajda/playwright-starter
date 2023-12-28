@@ -58,6 +58,17 @@ export class BookingApi {
     expect(response.status()).toBe(200);
     return await response.json();
   }
+
+  async partialUpdateBookingById(id: number | undefined, partialUpdate: BookingPartialUpdate): Promise<Booking> {
+    const authToken = await this.authorize({ username: 'admin', password: 'password123' });
+    const response = await this.apiHandler.patch(`/booking/${id}`, {
+      data: partialUpdate,
+      headers: { Cookie: `token=${authToken}` },
+    });
+    expect(response.ok()).toBeTruthy();
+    expect(response.status()).toBe(200);
+    return await response.json();
+  }
 }
 
 export interface Booking {
@@ -67,4 +78,13 @@ export interface Booking {
   depositpaid: boolean;
   bookingdates: { checkin: string; checkout: string };
   additionalneeds: string;
+}
+
+export interface BookingPartialUpdate {
+  firstname?: string;
+  lastname?: string;
+  totalprice?: number;
+  depositpaid?: boolean;
+  bookingdates?: { checkin?: string; checkout?: string };
+  additionalneeds?: string;
 }
