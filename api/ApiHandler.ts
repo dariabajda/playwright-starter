@@ -16,12 +16,21 @@ export class ApiHandler {
     });
   }
 
-  async logRequest(method: string, url: string, options: RequestOptions) {
+  async get(path: string, options?: RequestOptions): Promise<APIResponse> {
+    const url = this.baseUrl + path;
+    this.logRequest('GET', url, options);
+    return await this.request.get(url, options).then((response: APIResponse) => {
+      this.logResponse(response);
+      return response;
+    });
+  }
+
+  async logRequest(method: string, url: string, options?: RequestOptions) {
     console.log(`=== REQUEST ===`);
     console.log(`${method} ${url}\n`);
-    console.log(`Body:\n${JSON.stringify(options.data, null, 2)}\n`);
+    if (options) console.log(`Body:\n${JSON.stringify(options.data, null, 2)}\n`);
     console.log(`Headers:`);
-    if (options.headers)
+    if (options?.headers)
       Object.entries(options.headers).forEach(([key, value]) => {
         console.log(`${key}: ${value}`);
       });
