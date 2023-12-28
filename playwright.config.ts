@@ -1,9 +1,9 @@
 import { devices } from '@playwright/test';
 import { PlaywrightTestConfig } from '@playwright/test';
-import { devConfig } from './config/env/devConfig';
-import { TestConfig } from './config/testConfig';
-import { prodConfig } from './config/env/prodConfig';
-import { stageConfig } from './config/env/stageConfig';
+import { devConfig } from './config/env/dev-config';
+import { CustomTestConfig } from './config/custom-config';
+import { prodConfig } from './config/env/prod-config';
+import { stageConfig } from './config/env/stage-config';
 
 const defaultConfig: PlaywrightTestConfig = {
   testDir: './tests',
@@ -42,7 +42,7 @@ const defaultConfig: PlaywrightTestConfig = {
 const environment = process.env.TEST_ENV || 'stage';
 
 // config object with default configuration and environment specific configuration
-const config: TestConfig = {
+const config: CustomTestConfig = {
   ...defaultConfig,
   ...(environment === 'prod' ? prodConfig : environment === 'stage' ? stageConfig : devConfig),
 };

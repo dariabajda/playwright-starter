@@ -1,4 +1,4 @@
-import { Booking } from './BookingApi';
+import { Booking } from './booking-api';
 
 export const defaultBooking: Booking = {
   firstname: 'Jim',

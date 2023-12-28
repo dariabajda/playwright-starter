@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
-import { test } from '../../fixtures/my-test';
-import { defaultBooking, updatedBooking } from '../../api/booking/DefaultBooking';
+import { test } from '../../fixtures/custom-test';
+import { defaultBooking, updatedBooking } from '../../api/booking/default-booking-data';
 
 test('should create a booking', async ({ bookingApi }) => {
   // when

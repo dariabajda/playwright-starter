@@ -1,6 +1,6 @@
 import { expect, type APIRequestContext } from '@playwright/test';
-import { ApiHandler } from '../ApiHandler';
-import { defaultBooking } from './DefaultBooking';
+import { ApiHandler } from '../api-handler';
+import { defaultBooking } from './default-booking-data';
 
 export class BookingApi {
   private readonly apiHandler: ApiHandler;
