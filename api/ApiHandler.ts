@@ -34,6 +34,24 @@ export class ApiHandler {
     });
   }
 
+  async put(path: string, options?: RequestOptions): Promise<APIResponse> {
+    const url = this.baseUrl + path;
+    this.logRequest('PUT', url, options);
+    return await this.request.put(url, options).then((response: APIResponse) => {
+      this.logResponse(response);
+      return response;
+    });
+  }
+
+  async patch(path: string, options?: RequestOptions): Promise<APIResponse> {
+    const url = this.baseUrl + path;
+    this.logRequest('PATCH', url, options);
+    return await this.request.patch(url, options).then((response: APIResponse) => {
+      this.logResponse(response);
+      return response;
+    });
+  }
+
   // TODO: Maybe they can be moved? Or handle in a different manner?
   async logRequest(method: string, url: string, options?: RequestOptions) {
     console.log(`=== REQUEST ===`);

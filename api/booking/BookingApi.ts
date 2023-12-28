@@ -47,6 +47,17 @@ export class BookingApi {
     expect(response.ok()).toBeTruthy();
     expect(response.status()).toBe(201);
   }
+
+  async updateBookingById(id: number | undefined, booking: Booking): Promise<Booking> {
+    const authToken = await this.authorize({ username: 'admin', password: 'password123' });
+    const response = await this.apiHandler.put(`/booking/${id}`, {
+      data: booking,
+      headers: { Cookie: `token=${authToken}` },
+    });
+    expect(response.ok()).toBeTruthy();
+    expect(response.status()).toBe(200);
+    return await response.json();
+  }
 }
 
 export interface Booking {

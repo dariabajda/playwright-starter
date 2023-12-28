@@ -11,3 +11,15 @@ export const defaultBooking: Booking = {
   },
   additionalneeds: 'Breakfast',
 };
+
+export const updatedBooking: Booking = {
+  firstname: 'Anna',
+  lastname: 'Thomson',
+  totalprice: 218,
+  depositpaid: false,
+  bookingdates: {
+    checkin: '2023-10-12',
+    checkout: '2023-11-23',
+  },
+  additionalneeds: 'Dinner',
+};

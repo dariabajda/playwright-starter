@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixtures/my-test';
-import { defaultBooking } from '../api/booking/DefaultBooking';
+import { defaultBooking, updatedBooking } from '../api/booking/DefaultBooking';
 
 test('should create a booking', async ({ bookingApi }) => {
   // when
@@ -43,4 +43,17 @@ test('should delete booking', async ({ bookingApi }) => {
   // then
   const bookingIds = await bookingApi.getAllBookings();
   expect(bookingIds.map((booking) => booking.bookingid)).not.toContain(newBooking.bookingid);
+});
+
+test('should update booking', async ({ bookingApi }) => {
+  // given
+  const newBooking = await bookingApi.createBooking();
+
+  // when
+  const updateBookingResponse = await bookingApi.updateBookingById(newBooking.bookingid, updatedBooking);
+  expect(updateBookingResponse).toEqual(updatedBooking);
+
+  // then
+  const getBookingByIdResponse = await bookingApi.getBookingById(newBooking.bookingid);
+  expect(getBookingByIdResponse).toEqual(updatedBooking);
 });
