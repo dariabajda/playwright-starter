@@ -1,12 +1,13 @@
 import { expect, type APIRequestContext } from '@playwright/test';
 import { ApiHandler } from '../api-handler';
 import { defaultBooking } from './default-booking-data';
+import config from '../../playwright.config';
 
 export class BookingApi {
   private readonly apiHandler: ApiHandler;
 
   constructor(public readonly request: APIRequestContext) {
-    this.apiHandler = new ApiHandler(request, 'https://restful-booker.herokuapp.com');
+    this.apiHandler = new ApiHandler(request, config.bookingApiUrl);
   }
 
   async authorize(authData: { username: string; password: string }): Promise<string> {
