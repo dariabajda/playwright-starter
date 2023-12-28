@@ -32,3 +32,15 @@ test('should get new booking in all booking IDs', async ({ bookingApi }) => {
   // then
   expect(bookingIds.map((booking) => booking.bookingid)).toContain(newBooking.bookingid);
 });
+
+test('should delete booking', async ({ bookingApi }) => {
+  // given
+  const newBooking = await bookingApi.createBooking();
+
+  // when
+  await bookingApi.deleteBookingById(newBooking.bookingid);
+
+  // then
+  const bookingIds = await bookingApi.getAllBookings();
+  expect(bookingIds.map((booking) => booking.bookingid)).not.toContain(newBooking.bookingid);
+});

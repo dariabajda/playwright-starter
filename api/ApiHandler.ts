@@ -25,6 +25,16 @@ export class ApiHandler {
     });
   }
 
+  async delete(path: string, options?: RequestOptions): Promise<APIResponse> {
+    const url = this.baseUrl + path;
+    this.logRequest('DELETE', url, options);
+    return await this.request.delete(url, options).then((response: APIResponse) => {
+      this.logResponse(response);
+      return response;
+    });
+  }
+
+  // TODO: Maybe they can be moved? Or handle in a different manner?
   async logRequest(method: string, url: string, options?: RequestOptions) {
     console.log(`=== REQUEST ===`);
     console.log(`${method} ${url}\n`);
@@ -40,7 +50,7 @@ export class ApiHandler {
   async logResponse(response: APIResponse) {
     console.log(`=== RESPONSE ===`);
     console.log(`Status code: ${response.status()}\n`);
-    console.log(`Body:\n${JSON.stringify(await response.json(), null, 2)}\n`);
+    if (isJson(await response.body())) console.log(`Body:\n${JSON.stringify(await response.json(), null, 2)}\n`);
     console.log(`Headers:`);
     if (response.headers())
       Object.entries(response.headers()).forEach(([key, value]) => {
@@ -52,4 +62,13 @@ export class ApiHandler {
 interface RequestOptions {
   data?: string | Serializable;
   headers?: Record<string, string>;
+}
+
+function isJson(str: Buffer): boolean {
+  try {
+    JSON.parse(str.toString());
+  } catch (e) {
+    return false;
+  }
+  return true;
 }

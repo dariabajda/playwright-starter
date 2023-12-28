@@ -9,6 +9,14 @@ export class BookingApi {
     this.apiHandler = new ApiHandler(request, 'https://restful-booker.herokuapp.com');
   }
 
+  async authorize(authData: { username: string; password: string }): Promise<string> {
+    const response = await this.apiHandler.post('/auth', { data: authData });
+    expect(response.ok()).toBeTruthy();
+    expect(response.status()).toBe(200);
+    const tokenResponse: { token: string } = await response.json();
+    return tokenResponse.token;
+  }
+
   async createBooking(): Promise<{
     bookingid?: number;
     booking: Booking;
@@ -31,6 +39,13 @@ export class BookingApi {
     expect(response.ok()).toBeTruthy();
     expect(response.status()).toBe(200);
     return await response.json();
+  }
+
+  async deleteBookingById(id?: number) {
+    const authToken = await this.authorize({ username: 'admin', password: 'password123' });
+    const response = await this.apiHandler.delete(`/booking/${id}`, { headers: { Cookie: `token=${authToken}` } });
+    expect(response.ok()).toBeTruthy();
+    expect(response.status()).toBe(201);
   }
 }
 
