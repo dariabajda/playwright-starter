@@ -26,3 +26,5 @@ npm init playwright@latest
 
 6. Add reporters
    Based on https://playwright.dev/docs/test-reporters
+
+7. Add retry request possibility: https://hackernoon.com/enhancing-test-reliability-exploring-playwrights-retry-apis-for-robust-testing

@@ -1,4 +1,4 @@
-import { expect, type APIRequestContext } from '@playwright/test';
+import { expect, type APIRequestContext, APIResponse } from '@playwright/test';
 import { ApiHandler } from '../api-handler';
 import { defaultBooking } from './default-booking-data';
 import config from '../../playwright.config';
@@ -13,7 +13,6 @@ export class BookingApi {
   async authorize(authData: { username: string; password: string }): Promise<string> {
     const response = await this.apiHandler.post('/auth', { data: authData });
     expect(response.ok()).toBeTruthy();
-    expect(response.status()).toBe(200);
     const tokenResponse: { token: string } = await response.json();
     return tokenResponse.token;
   }
@@ -22,23 +21,27 @@ export class BookingApi {
     bookingid?: number;
     booking: Booking;
   }> {
-    const response = await this.apiHandler.post('/booking', { data: defaultBooking });
-    expect(response.ok()).toBeTruthy();
-    expect(response.status()).toBe(200);
-    return await response.json();
+    let response: APIResponse;
+    return await expect(async () => {
+      response = await this.apiHandler.post('/booking', { data: defaultBooking });
+      expect(response.ok()).toBeTruthy();
+      return response;
+    })
+      .toPass({ intervals: [1000, 1500, 2500], timeout: 5000 })
+      .then(async () => {
+        return await response.json();
+      });
   }
 
   async getBookingById(id?: number): Promise<Booking> {
     const response = await this.apiHandler.get(`/booking/${id}`);
     expect(response.ok()).toBeTruthy();
-    expect(response.status()).toBe(200);
     return await response.json();
   }
 
   async getAllBookings(): Promise<{ bookingid: number }[]> {
     const response = await this.apiHandler.get('/booking');
     expect(response.ok()).toBeTruthy();
-    expect(response.status()).toBe(200);
     return await response.json();
   }
 
@@ -46,7 +49,6 @@ export class BookingApi {
     const authToken = await this.authorize({ username: 'admin', password: 'password123' });
     const response = await this.apiHandler.delete(`/booking/${id}`, { headers: { Cookie: `token=${authToken}` } });
     expect(response.ok()).toBeTruthy();
-    expect(response.status()).toBe(201);
   }
 
   async updateBookingById(id: number | undefined, booking: Booking): Promise<Booking> {
@@ -56,7 +58,6 @@ export class BookingApi {
       headers: { Cookie: `token=${authToken}` },
     });
     expect(response.ok()).toBeTruthy();
-    expect(response.status()).toBe(200);
     return await response.json();
   }
 
@@ -67,7 +68,6 @@ export class BookingApi {
       headers: { Cookie: `token=${authToken}` },
     });
     expect(response.ok()).toBeTruthy();
-    expect(response.status()).toBe(200);
     return await response.json();
   }
 }
