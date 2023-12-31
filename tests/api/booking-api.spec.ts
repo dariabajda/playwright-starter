@@ -5,7 +5,7 @@ import { defaultBooking, updatedBooking } from '../../api/booking/default-bookin
 test.describe('Booking API', () => {
   test('should create a booking', async ({ bookingApi }) => {
     // when
-    const newBooking = await bookingApi.createBooking();
+    const newBooking = await bookingApi.createBookingWithRetry();
 
     // then
     expect(newBooking.bookingid).toBeGreaterThan(0);

@@ -1,5 +1,6 @@
 import { expect, type APIRequestContext, APIResponse } from '@playwright/test';
 import { ApiHandler } from '../api-handler';
+import { retryRequest } from '../request-retry';
 import { defaultBooking } from './default-booking-data';
 import config from '../../playwright.config';
 
@@ -21,6 +22,15 @@ export class BookingApi {
     bookingid?: number;
     booking: Booking;
   }> {
+    const response = await this.apiHandler.post('/booking', { data: defaultBooking });
+    expect(response.ok()).toBeTruthy();
+    return await response.json();
+  }
+
+  async createBookingWithRetry(): Promise<{
+    bookingid?: number;
+    booking: Booking;
+  }> {
     let response: APIResponse;
     return await expect(async () => {
       response = await this.apiHandler.post('/booking', { data: defaultBooking });
@@ -31,6 +41,17 @@ export class BookingApi {
       .then(async () => {
         return await response.json();
       });
+  }
+
+  async createBookingWithRetry2(): Promise<{
+    bookingid?: number;
+    booking: Booking;
+  }> {
+    return retryRequest(async () => {
+      const response = await this.apiHandler.post('/booking', { data: defaultBooking });
+      expect(response.ok()).toBeTruthy();
+      return response;
+    });
   }
 
   async getBookingById(id?: number): Promise<Booking> {
