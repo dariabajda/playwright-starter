@@ -3,6 +3,7 @@ import { ApiHandler } from '../api-handler';
 import { retryRequest } from '../request-retry';
 import { defaultBooking } from './default-booking-data';
 import config from '../../playwright.config';
+import { adminUser } from './default-users';
 
 export class BookingApi {
   private readonly apiHandler: ApiHandler;
@@ -67,13 +68,13 @@ export class BookingApi {
   }
 
   async deleteBookingById(id?: number) {
-    const authToken = await this.authorize({ username: 'admin', password: 'password123' });
+    const authToken = await this.authorize(adminUser);
     const response = await this.apiHandler.delete(`/booking/${id}`, { headers: { Cookie: `token=${authToken}` } });
     expect(response.ok()).toBeTruthy();
   }
 
   async updateBookingById(id: number | undefined, booking: Booking): Promise<Booking> {
-    const authToken = await this.authorize({ username: 'admin', password: 'password123' });
+    const authToken = await this.authorize(adminUser);
     const response = await this.apiHandler.put(`/booking/${id}`, {
       data: booking,
       headers: { Cookie: `token=${authToken}` },
@@ -83,7 +84,7 @@ export class BookingApi {
   }
 
   async partialUpdateBookingById(id: number | undefined, partialUpdate: BookingPartialUpdate): Promise<Booking> {
-    const authToken = await this.authorize({ username: 'admin', password: 'password123' });
+    const authToken = await this.authorize(adminUser);
     const response = await this.apiHandler.patch(`/booking/${id}`, {
       data: partialUpdate,
       headers: { Cookie: `token=${authToken}` },
