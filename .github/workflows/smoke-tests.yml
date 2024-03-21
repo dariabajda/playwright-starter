@@ -7,17 +7,17 @@ on:
     branches: [main, master]
 
 jobs:
-  test:
+  smoke-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install dependencies
         run: npm ci
@@ -35,3 +35,26 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 2
+
+      - name: Notify Slack
+        uses: rtCamp/action-slack-notify@v2
+        if: success()
+        env:
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_TITLE: 'smoke tests report'
+          SLACK_MESSAGE: 'Good job! Smoke tests passed. Have a nice day 🥳'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          MSG_MINIMAL: true
+          SLACK_FOOTER: ''
+
+      - name: Notify Slack about test failure
+        uses: rtCamp/action-slack-notify@v2
+        if: failure()
+        env:
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_TITLE: ':rotating_light: smoke tests report'
+          SLACK_MESSAGE: "Check out report for failed tests: \n
+            <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|Summary> \n"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          MSG_MINIMAL: true
+          SLACK_FOOTER: ''
